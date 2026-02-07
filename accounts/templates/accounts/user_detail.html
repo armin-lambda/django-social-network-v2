@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ user.username }} - Profile{% endblock %}
+
+{% block content %}
+
+<div class="profile-header">
+    <div class="profile-left">
+        {% if user.image %}
+            <img src="{{ user.image.url }}" class="profile-photo" alt="profile image">
+        {% else %}
+            <img src="{% static 'accounts/images/default-profile-image.jpeg' %}" class="profile-photo" alt="default profile image">
+        {% endif %}
+    </div>
+
+    <div class="profile-right">
+        <h2 class="profile-username">@{{ user.username }}</h2>
+
+        {% if user.email %}
+            <span class="profile-email">{{ user.email }}</span>
+        {% endif %}
+
+        <span class="profile-name">{{ user.get_full_name }}</span>
+
+        {% if request.user != user %}
+            <div class="follow-box">
+                {% if not is_followed %}
+                    <a href="{{ user.get_follow_url }}" class="btn btn-primary">Follow</a>
+                {% else %}
+                    <a href="{{ user.get_unfollow_url }}" class="btn btn-danger">Unfollow</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if request.user == user %}
+            <div style="margin-top: 15px;">
+                {% if user.image %}
+                    <a href="{{ user.get_profile_image_delete_url }}" class="btn btn-danger">Delete Profile Image</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if user.bio %}
+            <p class="profile-bio">{{ user.bio }}</p>
+        {% endif %}
+
+        <div class="profile-actions">
+
+            {% if request.user == user %}
+                <a href="{{ user.get_post_create_url }}" class="action-link">Upload Post</a>
+                <span class="divider-dot">•</span>
+
+                <a href="{{ user.get_update_url }}" class="action-link">Edit Account</a>
+                <span class="divider-dot">•</span>
+
+                <a href="{{ user.get_delete_url }}" class="action-link delete">Delete Account</a>
+                <span class="divider-dot">•</span>
+            {% endif %}
+
+            <a href="{{ user.get_following_list_url }}" class="action-link">
+                Following ({{ user.get_following_count }})
+            </a>
+            <span class="divider-dot">•</span>
+
+            <a href="{{ user.get_follower_list_url }}" class="action-link">
+                Followers ({{ user.get_followers_count }})
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+<hr class="divider">
+<h3 class="section-title">Uploaded Posts</h3>
+
+{% with post_list=page_obj %}
+    {% if post_list %}
+
+        {% for post in post_list %}
+            <div class="post-row">
+
+                <a href="{{ post.get_absolute_url }}" class="post-thumb">
+                    {% if post.file_is_image %}
+                        <img src="{{ post.file.url }}" alt="post media">
+                    {% elif post.file_is_video %}
+                        <video src="{{ post.file.url }}"></video>
+                    {% endif %}
+                </a>
+
+                <div class="post-info">
+                    <p class="post-desc">{{ post.title }}</p>
+                    <span class="post-date">{{ post.created_at|timesince }} ago</span>
+                </div>
+
+            </div>
+        {% endfor %}
+
+        {% if post_list.has_other_pages %}
+            {% include 'includes/pagination.html' %}
+        {% endif %}
+
+    {% else %}
+        <div class="empty-state">Nothing to show</div>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}

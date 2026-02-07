@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="form-card">
+    <h2 class="form-title">Login</h2>
+
+    {% include 'includes/form_errors.html' %}
+
+    <form action="" method="post" class="form">
+        {% csrf_token %}
+
+        {{ form.username }}
+        {{ form.password }}
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    <p class="page-link-container">
+        Forgot your password?
+        <a href="{% url 'accounts:user-password-reset' %}" class="page-link">Reset Password</a>
+    </p>
+
+    <p class="page-link-container">
+        Don't have an account?
+        <a href="{% url 'accounts:user-create' %}" class="page-link">Register</a>
+    </p>
+</div>
+
+{% endblock %}

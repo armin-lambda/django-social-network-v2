@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications {{ request.user.get_notifications_count }}{% endblock %}
+
+{% block content %}
+
+{% with notification_list=page_obj %}
+<h2 class="section-title">Notifications {{ unread_count }}</h2>
+
+{% if notification_list %}
+
+    <div class="notif-actions">
+        {% if can_read_all %}
+            <a href="{% url 'notifications:notification-read-all' %}" class="notif-link">Mark all as Read</a>
+            <span class="divider-dot">•</span>
+        {% endif %}
+
+        <a href="{% url 'notifications:notification-delete-all' %}" class="notif-link delete">Delete All</a>
+    </div>
+
+    <div class="notif-list">
+        {% for notif in notification_list %}
+            <div class="notif-item {% if not notif.is_read %}unread{% endif %}">
+
+                <div class="notif-top">
+                    <span class="notif-time">{{ notif.created_at|timesince }} ago</span>
+                </div>
+
+                <p class="notif-text">
+
+                    {# FOLLOW #}
+                    {% if notif.type == 'follow' %}
+                        <a href="{{ notif.from_user.get_absolute_url }}" class="link">@{{ notif.from_user.username }}</a> followed you.
+
+                    {# POST #}
+                    {% elif notif.type == 'post' %}
+                        <a href="{{ notif.from_user.get_absolute_url }}" class="link">@{{ notif.from_user.username }}</a> 
+                        created a new <a href="{{ notif.target.get_absolute_url }}" class="link">post</a>.
+
+                    {# COMMENT #}
+                    {% elif notif.type == 'comment' %}
+                        <a href="{{ notif.from_user.get_absolute_url }}" class="link">@{{ notif.from_user.username }}</a> 
+                        commented on your <a href="{{ notif.target.post.get_absolute_url }}" class="notif-post">post</a>.
+
+                    {# LIKE #}
+                    {% elif notif.type == 'like' %}
+                        <a href="{{ notif.from_user.get_absolute_url }}" class="link">@{{ notif.from_user.username }}</a> 
+                        liked your <a href="{{ notif.target.post.get_absolute_url }}" class="notif-post">post</a>.
+                    {% endif %}
+                </p>
+
+                <div class="notif-actions-inline">
+                    {% if not notif.is_read %}
+                        <a href="{{ notif.get_read_url }}" class="notif-link">Mark as Read</a>
+                        <span class="divider-dot">•</span>
+                    {% endif %}
+
+                    <a href="{{ notif.get_delete_url }}" class="notif-link delete">Delete</a>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if notification_list.has_other_pages %}
+        {% include 'includes/pagination.html' %}
+    {% endif %}
+
+{% else %}
+    <div class="empty-state">Nothing to show</div>
+{% endif %}
+
+{% endwith %}
+
+{% endblock %}

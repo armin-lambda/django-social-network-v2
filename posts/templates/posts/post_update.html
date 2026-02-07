@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+
+<div class="form-card">
+    <h2 class="form-title">Edit Post</h2>
+
+    {% include 'includes/form_errors.html' %}
+
+    <form action="" method="post" enctype="multipart/form-data" class="form">
+        {% csrf_token %}
+
+        {{ form.title }}
+        {{ form.description }}
+        {{ form.file }}
+
+        <button type="submit" class="btn btn-primary">Edit</button>
+    </form>
+</div>
+
+{% endblock %}

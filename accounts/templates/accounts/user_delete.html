@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block content %}
+
+<div class="form-card">
+    <h2 class="form-title">Delete Account</h2>
+    <p>To delete your account, write your username correctly.</p>
+
+    {% include 'includes/form_errors.html' %}
+
+    <form action="" method="post" class="form">
+        {% csrf_token %}
+
+        {{ form.username }}
+
+        <button type="submit" class="btn btn-danger">Delete Account</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+
+<form class="search-form">
+    <input type="text" name="q" class="search-input" placeholder="Search posts...">
+    <input type="submit" value="Search" class="search-btn">
+</form>
+
+{% with post_list=page_obj %}
+    {% if post_list %}
+
+        {% for post in post_list %}
+            <div class="post-row">
+
+                <a href="{{ post.get_absolute_url }}" class="post-thumb">
+                    {% if post.file_is_image %}
+                        <img src="{{ post.file.url }}" alt="post media">
+                    {% elif post.file_is_video %}
+                        <video src="{{ post.file.url }}"></video>
+                    {% endif %}
+                </a>
+
+                <div class="post-info">
+                    <p class="post-desc">{{ post.title }}</p>
+                    <a href="{{ post.user.get_absolute_url }}" class="post-user">{{ post.user }}</a>
+                    <span class="post-date">{{ post.created_at|timesince }} ago</span>
+                </div>
+
+            </div>
+        {% endfor %}
+
+        {% if post_list.has_other_pages %}
+            {% include 'includes/pagination.html' %}
+        {% endif %}
+
+    {% else %}
+        <div class="empty-state">Nothing to show</div>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}

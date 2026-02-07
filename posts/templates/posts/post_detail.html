@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+
+<div class="post-detail-box">
+
+    {% if post.file_is_image %}
+        <img src="{{ post.file.url }}" class="post-preview" alt="post preview">
+    {% elif post.file_is_video %}
+        <video src="{{ post.file.url }}" class="post-preview"></video>
+    {% endif %}
+
+    <h2 class="post-title">{{ post.title }}</h2>
+
+    <div class="post-meta">
+        <a href="{{ post.user.get_absolute_url }}" class="post-author">{{ post.user }}</a>
+        <span class="post-date">• Published {{ post.created_at|timesince }} ago</span>
+    </div>
+
+    <div class="post-actions">
+
+        {% if not is_liked %}
+            <a href="{{ post.get_like_url }}" class="post-action-link">Like ({{ post.get_likes_count }})</a>
+        {% else %}
+            <a href="{{ post.get_unlike_url }}" class="post-action-link">Unlike ({{ post.get_likes_count }})</a>
+        {% endif %}
+
+        {% if request.user == post.user %}
+            <span class="divider-dot">•</span>
+            <a href="{{ post.get_update_url }}" class="post-action-link">Edit</a>
+
+            <span class="divider-dot">•</span>
+            <a href="{{ post.get_delete_url }}" class="post-action-link delete">Delete</a>
+        {% endif %}
+
+    </div>
+
+    {% if post.description %}
+        <p class="post-full-desc">
+            {{ post.description|linebreaks }}
+        </p>
+    {% endif %}
+
+    <hr class="divider">
+
+    <form action="" method="post" class="form" style="margin-bottom: 24px;">
+        {% csrf_token %}
+
+        {{ form.body }}
+
+        <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+
+    <div class="comments-section">
+        <h3 class="comments-title">Comments ({{ post.get_comments_count }})</h3>
+
+        {% with comment_list=page_obj %}
+            {% if comment_list %}
+
+                {% for comment in comment_list %}
+                    <div class="comment-item">
+                        <span class="comment-author">
+                            <a href="{{ comment.user.get_absolute_url }}" class="link">{{ comment.user.username }}</a>
+                        </span>
+
+                        <p class="comment-text">
+                            {{ comment.body|linebreaks }}
+                        </p>
+                    </div>
+                {% endfor %}
+
+                {% if comment_list.has_other_pages %}
+                    {% include 'includes/pagination.html' %}
+                {% endif %}
+
+            {% else %}
+                <div class="empty-state">Nothing to show</div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+</div>
+
+{% endblock %}

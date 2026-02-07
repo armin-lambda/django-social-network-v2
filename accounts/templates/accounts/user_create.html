@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+
+<div class="form-card">
+    <h2 class="form-title">Create an Account</h2>
+
+    {% include 'includes/form_errors.html' %}
+
+    <form action="" method="post" class="form">
+        {% csrf_token %}
+
+        {{ form.username }}
+        {{ form.first_name }}
+        {{ form.last_name }}
+        {{ form.phone_number }}
+        {{ form.password }}
+        {{ form.confirm_password }}
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
+
+{% endblock %}

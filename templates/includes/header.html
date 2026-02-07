@@ -1,0 +1,15 @@
+<header class="topbar">
+    <nav class="nav">
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'posts:post-list' %}" class="nav-link">Posts</a>
+            <a href="{% url 'accounts:user-list' %}" class="nav-link">People</a>
+            <a href="{% url 'accounts:user-detail' request.user.username %}" class="nav-link">Profile</a>
+            <a href="{% url 'notifications:notification-list' %}" class="nav-link">
+                Notifications {{ request.user.get_notifications_count }}
+            </a>
+            <a href="{% url 'accounts:user-logout' %}" class="nav-link">Logout</a>
+        {% else %}
+            <a href="{% url 'accounts:user-login' %}" class="nav-link">Login / Register</a>
+        {% endif %}
+    </nav>
+</header>

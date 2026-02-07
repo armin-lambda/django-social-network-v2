@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Followers - {{ user.username }}{% endblock %}
+
+{% block content %}
+
+<form class="search-form">
+    <input type="text" name="q" class="search-input" placeholder="Search followers...">
+    <input type="submit" value="Search" class="search-btn">
+</form>
+
+<h2 class="section-title">
+    Followers of <a href="{{ user.get_absolute_url }}" class="link">{{ user.username }}</a>
+</h2>
+
+{% with follower_list=page_obj %}
+    {% if follower_list %}
+
+        {% for user in follower_list %}
+            <div class="user-row">
+
+                <a href="{{ user.get_absolute_url }}" class="avatar">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}" alt="profile image">
+                    {% else %}
+                        <img src="{% static 'accounts/images/default-profile-image.jpeg' %}" alt="default profile image">
+                    {% endif %}
+                </a>
+
+                <div class="user-info">
+                    <a href="{{ user.get_absolute_url }}" class="user-username">@{{ user.username }}</a>
+                    <span class="user-email">{{ user.get_full_name }}</span>
+
+                    {% if user.bio %}
+                        <p class="user-bio">{{ user.bio }}</p>
+                    {% endif %}
+                </div>
+
+            </div>
+        {% endfor %}
+
+        {% if follower_list.has_other_pages %}
+            {% include 'includes/pagination.html' %}
+        {% endif %}
+
+    {% else %}
+        <div class="empty-state">Nothing to show</div>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}
