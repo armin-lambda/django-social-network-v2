@@ -34,7 +34,7 @@
         {% endif %}
 
         {% if request.user == user %}
-            <div style="margin-top: 15px;">
+            <div style="margin-top: 15px; margin-bottom: 10px;">
                 {% if user.image %}
                     <a href="{{ user.get_profile_image_delete_url }}" class="btn btn-danger">Delete Profile Image</a>
                 {% endif %}
