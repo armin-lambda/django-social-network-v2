@@ -9,7 +9,7 @@
     {% if post.file_is_image %}
         <img src="{{ post.file.url }}" class="post-preview" alt="post preview">
     {% elif post.file_is_video %}
-        <video src="{{ post.file.url }}" class="post-preview"></video>
+        <video src="{{ post.file.url }}" class="post-preview" controls></video>
     {% endif %}
 
     <h2 class="post-title">{{ post.title }}</h2>
@@ -44,11 +44,15 @@
     {% endif %}
 
     <hr class="divider">
-
+    
+    {% include 'includes/form_errors.html' %}
+    
     <form action="" method="post" class="form" style="margin-bottom: 24px;">
         {% csrf_token %}
 
-        {{ form.body }}
+        {% for field in form %}
+            {{ field }}
+        {% endfor %}
 
         <button type="submit" class="btn btn-primary">Post</button>
     </form>

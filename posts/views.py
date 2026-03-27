@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
@@ -15,7 +15,11 @@ class PostListView(LoginRequiredMixin, View):
     template_name = 'posts/index.html'
 
     def get(self, request):
-        post_list = Post.objects.all()
+        post_list = Post.objects.annotate(
+            ranking_score=
+                (0.5 * Count('comments')) +
+                (0.3 * Count('likes'))
+        ).order_by('-ranking_score', '-created_at')
 
         if request.GET.get('search'):
             search = request.GET.get('search')

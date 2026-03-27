@@ -6,8 +6,11 @@
 {% block content %}
 
 <form action="" method="get" class="search-form">
-    <input type="text" name="search" class="search-input" placeholder="Search users...">
+    <input type="text" name="search" class="search-input" placeholder="Search users..." required value="{{ request.GET.search }}">
     <input type="submit" value="Search" class="search-btn">
+    {% if request.GET.search %}
+        <a href="{% url 'accounts:user-list' %}" class="search-clear-btn">×</a>
+    {% endif %}
 </form>
 
 {% with user_list=page_obj %}

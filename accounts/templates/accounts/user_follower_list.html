@@ -5,9 +5,12 @@
 
 {% block content %}
 
-<form class="search-form">
-    <input type="text" name="q" class="search-input" placeholder="Search followers...">
+<form action="" method="get" class="search-form">
+    <input type="text" name="search" class="search-input" placeholder="Search users..." required value="{{ request.GET.search }}">
     <input type="submit" value="Search" class="search-btn">
+    {% if request.GET.search %}
+        <a href="{{ user.get_follower_list_url }}" class="search-clear-btn">×</a>
+    {% endif %}
 </form>
 
 <h2 class="section-title">

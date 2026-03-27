@@ -3,7 +3,7 @@ import random
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -72,6 +72,7 @@ class UserLogoutView(LoginRequiredMixin, View):
         return redirect('accounts:user-login')
 
 
+# ----------------------------------------
 # ----- RESET PASSWORD -----
 
 class UserPasswordResetView(AnonymousRequiredMixin, View):
@@ -150,7 +151,7 @@ class UserPasswordChangeView(AnonymousRequiredMixin, View):
         messages.success(request, 'Password changed successfully', 'success')
         return redirect('accounts:user-login')
 
-# ----- END RESET PASSWORD -----
+# ----------------------------------------
 
 
 class UserUpdateView(LoginRequiredMixin, View):
@@ -215,7 +216,13 @@ class UserListView(LoginRequiredMixin, View):
     template_name = 'accounts/user_list.html'
 
     def get(self, request):
-        user_list = User.objects.all()
+        user_list = User.objects.annotate(
+            ranking_score=
+                (0.5 * Count('followers')) + 
+                (0.3 * Count('following')) + 
+                (0.1 * Count('posts')) + 
+                (0.1 * Count('post_comments'))
+        ).order_by('-ranking_score', '-created_at')
 
         if request.GET.get('search'):
             search = request.GET['search']
@@ -318,4 +325,3 @@ class UserFollowingListView(LoginRequiredMixin, View):
             'user': user,
             'page_obj': get_pagination_context(request, following_list, 10),
         })
-

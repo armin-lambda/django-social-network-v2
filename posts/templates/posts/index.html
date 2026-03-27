@@ -4,14 +4,16 @@
 
 {% block content %}
 
-<form class="search-form">
-    <input type="text" name="q" class="search-input" placeholder="Search posts...">
+<form action="" method="get" class="search-form">
+    <input type="text" name="search" class="search-input" placeholder="Search posts..." required value="{{ request.GET.search }}">
     <input type="submit" value="Search" class="search-btn">
+    {% if request.GET.search %}
+        <a href="{% url 'posts:post-list' %}" class="search-clear-btn">×</a>
+    {% endif %}
 </form>
 
 {% with post_list=page_obj %}
     {% if post_list %}
-
         {% for post in post_list %}
             <div class="post-row">
 
@@ -35,7 +37,6 @@
         {% if post_list.has_other_pages %}
             {% include 'includes/pagination.html' %}
         {% endif %}
-
     {% else %}
         <div class="empty-state">Nothing to show</div>
     {% endif %}

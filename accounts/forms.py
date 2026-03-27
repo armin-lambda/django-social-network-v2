@@ -334,4 +334,3 @@ class UserPasswordChangeForm(forms.Form):
         user.set_password(cd['password'])
         user.save()
         return user
-

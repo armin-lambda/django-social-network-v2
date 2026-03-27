@@ -101,6 +101,7 @@ body {
   color: #fff;
   cursor: pointer;
   font-size: 0.9rem;
+  text-decoration: none;
   transition: var(--transition);
 }
 
@@ -108,6 +109,22 @@ body {
   background: #004a9c;
 }
 
+.search-clear-btn {
+  padding: 5px 18px;
+  border-radius: var(--radius);
+  border: none;
+  background: #bb0000;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.5rem;
+  text-decoration: none;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.search-clear-btn:hover {
+  background: #9c0000;
+}
 
 .pagination {
   display: flex;

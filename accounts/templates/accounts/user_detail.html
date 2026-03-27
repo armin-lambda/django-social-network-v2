@@ -73,7 +73,7 @@
 </div>
 
 <hr class="divider">
-<h3 class="section-title">Uploaded Posts</h3>
+<h3 class="section-title">Uploaded Posts ({{ user.get_posts_count }})</h3>
 
 {% with post_list=page_obj %}
     {% if post_list %}

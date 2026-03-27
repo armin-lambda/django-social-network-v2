@@ -17,7 +17,7 @@ class PostCreateForm(forms.Form):
         max_length=1000,
         required=False,
         widget=forms.Textarea(attrs={
-            'placeholder': 'Description',
+            'placeholder': 'Description (Optional)',
             'class': 'form-textarea',
         }),
     )
